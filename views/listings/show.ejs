@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>WanderLust - Listing Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 300px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h3>Listings Details!</h3>
+    <ul>
+        <img src="<%= listing.image.url %>" alt="listing image">
+        <li><strong>Title:</strong> <%= listing.title %></li>
+        <li><strong>Description:</strong> <%= listing.description %></li>
+        <li><strong>Price:</strong> &#8377;<%= listing.price.toLocaleString("en-IN") %></li>
+        <li><strong>Location:</strong> <%= listing.location %></li>
+    </ul>
+    <%  if ( currUser && currUser._id.equals(listing.owner._id)) { %>
+    <a href="/listings/<%= listing._id %>/edit">Edit this listing</a>
+    <br/>
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+        <button>Delete this listing</button>
+    </form>
+
+    <% } %>
+
+    <form method="POST" action="/listings/<%= listing._id %>/reviews" class="needs-validation" novalidate>
+        <label for="rating">Rating:</label>
+        <div class="form-group">
+            <input type="range" id="rating" name="review[rating]" min="1" max="5" step="1" value="3" class="form-control" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please choose a rating.
+            </div>
+        </div>
+    
+        <label for="review">Review:</label>
+        <div class="form-group">
+            <textarea id="review" name="review[comment]" rows="4" cols="50" class="form-control" required></textarea>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please provide a review.
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+    <hr/>
+    <h4>All Reviews</h4>
+   <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <% for (review of listing.reviews) { %>
+        <div style="border: 1px solid #ddd; padding: 10px; width: 48%; box-sizing: border-box;">
+            <h4>Rating: <%= review.rating %></h4>
+            <p><%= review.comment %></p>
+            <form method="POST" action="/listings/<%=listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                <button class="btn btn-sm btn-dark"> Delete</button>
+            </form>
+        </div>
+       
+   <% }  %>
+</div>
+
+   
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
