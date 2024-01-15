@@ -150,7 +150,7 @@ app.get("/listings/:id/edit" ,isLoggedIn , renderEditForm);
 
 //update Route
 
-app.put("/listings/:id" ,isLoggedIn, upload.single("listing[image]"), validateListing,updateListings)
+app.put("/listings/:id" ,isLoggedIn, upload.single("listing[image]"),updateListings, validateListing)
 
 //Delete Route
 
